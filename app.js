@@ -1,0 +1,19 @@
+// Configuración inicial. Cambia el WhatsApp por el número del negocio, con código de país y sin +.
+const STORE_WHATSAPP = "18090000000";
+const sample = [
+{id:"p1",name:"Perfume elegante",category:"Perfumes",price:1850,image:"https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=80",description:"Fragancia para ocasiones especiales."},
+{id:"p2",name:"Camiseta esencial",category:"Ropa",price:950,image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80",description:"Comodidad y estilo para todos los días."},
+{id:"p3",name:"Bolso urbano",category:"Accesorios",price:1450,image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80",description:"Un accesorio versátil para tu look."},
+{id:"p4",name:"Reloj clásico",category:"Accesorios",price:2200,image:"https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80",description:"Diseño clásico y elegante."}
+];
+function loadProducts(){try{let x=JSON.parse(localStorage.getItem("damaso_products"));return Array.isArray(x)?x:sample}catch(e){return sample}}
+let products=loadProducts(), cart=[], category="Todos";
+const money=n=>"RD$"+Number(n||0).toLocaleString("es-DO");
+function render(){const cats=["Todos",...new Set(products.map(p=>p.category||"Otros"))];document.getElementById("filters").innerHTML=cats.map(c=>`<button class="filter ${c===category?"active":""}" onclick="category='${c.replace(/'/g,"\\'")}';render()">${c}</button>`).join("");let shown=category==="Todos"?products:products.filter(p=>p.category===category);document.getElementById("grid").innerHTML=shown.map(p=>`<article class="product"><img src="${safe(p.image)}" alt="${safe(p.name)}" onerror="this.src='https://placehold.co/600x600/171717/d6b15e?text=Damaso+Store'"><div class="pbody"><div class="category">${safe(p.category||"Otros")}</div><h3>${safe(p.name)}</h3><div class="price">${money(p.price)}</div><button class="btn" onclick="addToCart('${p.id}')">Agregar al carrito</button></div></article>`).join("")||"<p>Aún no hay productos publicados.</p>";document.getElementById("cartCount").textContent=cart.reduce((a,b)=>a+b.qty,0)}
+function safe(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function addToCart(id){let p=products.find(x=>x.id===id);if(!p)return;let c=cart.find(x=>x.id===id);c?c.qty++:cart.push({...p,qty:1});render()}
+function openCart(){document.getElementById("cartModal").classList.add("show");renderCart()}
+function closeCart(){document.getElementById("cartModal").classList.remove("show")}
+function renderCart(){document.getElementById("cartItems").innerHTML=cart.map(p=>`<div class="cartline"><span>${safe(p.name)} × ${p.qty}</span><strong>${money(p.price*p.qty)}</strong></div>`).join("")||"<p>Tu carrito está vacío.</p>";document.getElementById("cartTotal").textContent=money(cart.reduce((a,p)=>a+p.price*p.qty,0))}
+function checkout(){if(!cart.length)return alert("Agrega productos al carrito.");let name=document.getElementById("customerName").value.trim(),phone=document.getElementById("customerPhone").value.trim(),address=document.getElementById("customerAddress").value.trim();if(!name||!phone)return alert("Completa tu nombre y teléfono.");let msg=`Hola, quiero realizar este pedido en Damaso de Todo Store:\n${cart.map(p=>`• ${p.name} x${p.qty}: ${money(p.price*p.qty)}`).join("\n")}\nTotal: ${money(cart.reduce((a,p)=>a+p.price*p.qty,0))}\nNombre: ${name}\nTeléfono: ${phone}\nEntrega: ${address}`;window.open(`https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(msg)}`,"_blank")}
+document.getElementById("year").textContent=new Date().getFullYear();document.getElementById("waLink").href=`https://wa.me/${STORE_WHATSAPP}`;render();

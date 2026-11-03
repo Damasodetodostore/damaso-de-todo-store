@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Damaso de Todo Store | Tienda online</title>
+<style>
+:root{--gold:#d6b15e;--black:#111;--cream:#f7f5ef;--muted:#777}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--cream);color:#191919}
+header{background:#101010;color:white;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;border-bottom:2px solid var(--gold)}
+.brand{font-weight:900;letter-spacing:.8px;font-size:1.15rem}.brand span{color:var(--gold)}
+nav{display:flex;gap:18px;align-items:center}nav a{color:#eee;text-decoration:none;font-size:.92rem}
+.hero{padding:58px 5%;background:linear-gradient(115deg,#111 0%,#24211a 65%,#40351e 100%);color:white;display:grid;grid-template-columns:1.2fr .8fr;gap:25px;align-items:center}
+.kicker{color:var(--gold);letter-spacing:3px;font-size:.75rem;font-weight:800}.hero h1{font-size:clamp(2.3rem,6vw,4.5rem);line-height:1.02;margin:12px 0}.hero p{color:#ddd;max-width:540px;line-height:1.7}
+.hero-art{min-height:240px;border:1px solid #8b713a;border-radius:20px;background:radial-gradient(circle at 50% 45%,#4b4026,#151515 65%);display:grid;place-items:center;text-align:center;color:var(--gold);font-size:2rem;font-weight:900;letter-spacing:2px}
+.btn{display:inline-block;background:var(--gold);color:#111;padding:12px 18px;border-radius:7px;text-decoration:none;font-weight:800;border:0;cursor:pointer}
+main{padding:34px 5%}.section-head{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}.section-head h2{margin:0;font-size:1.7rem}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}
+.filter{border:1px solid #d9d2c1;background:white;border-radius:20px;padding:8px 14px;cursor:pointer}.filter.active{background:#111;color:var(--gold);border-color:#111}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.product{background:white;border-radius:12px;overflow:hidden;border:1px solid #e9e5db;box-shadow:0 5px 18px #00000008}.product img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#e9e4d8}.pbody{padding:14px}.category{color:#94752f;text-transform:uppercase;font-size:.68rem;letter-spacing:1px;font-weight:800}.product h3{margin:7px 0;font-size:1rem}.price{font-weight:900;font-size:1.05rem}.pbody button{width:100%;margin-top:12px}
+footer{background:#111;color:#bbb;padding:25px 5%;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;border-top:2px solid var(--gold)}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:9;align-items:center;justify-content:center;padding:15px}.modal.show{display:flex}.dialog{background:white;border-radius:14px;padding:22px;max-width:520px;width:100%;max-height:90vh;overflow:auto}.dialog input,.dialog textarea{width:100%;padding:11px;margin:6px 0 12px;border:1px solid #ccc;border-radius:6px}.cartline{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eee}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr}.hero-art{min-height:160px}}
+@media(max-width:500px){.grid{grid-template-columns:1fr 1fr;gap:10px}.pbody{padding:10px}.product h3{font-size:.9rem}.hero{padding:40px 5%}nav{gap:10px}}
+</style>
+</head>
+<body>
+<header><div class="brand">DAMASO <span>DE TODO STORE</span></div><nav><a href="#productos">Productos</a><a href="#contacto">Contacto</a><button class="btn" onclick="openCart()">Carrito (<span id="cartCount">0</span>)</button></nav></header>
+<section class="hero"><div><div class="kicker">ESTILO · VARIEDAD · BUEN PRECIO</div><h1>Todo lo que buscas,<br><span style="color:var(--gold)">en un solo lugar.</span></h1><p>Descubre ropa, perfumes, accesorios y mucho más. Explora nuestra selección y haz tu pedido de forma fácil y rápida.</p><a class="btn" href="#productos">Ver productos</a></div><div class="hero-art">D<span style="color:white">·</span>TODO<br><small style="font-size:.75rem;color:#eee;letter-spacing:5px">STORE</small></div></section>
+<main id="productos"><div class="section-head"><h2>Productos destacados</h2><span style="color:var(--muted)">Nuevas opciones para ti</span></div><div class="filters" id="filters"></div><div class="grid" id="grid"></div></main>
+<footer id="contacto"><div><strong style="color:var(--gold)">Damaso de Todo Store</strong><br>Tu tienda de confianza, siempre cerca.</div><div>Pedidos y consultas: <a id="waLink" href="#" style="color:var(--gold)">WhatsApp</a><br><small>Conecta tus redes sociales desde el panel administrador.</small></div><div>© <span id="year"></span> Damaso de Todo Store</div></footer>
+<div class="modal" id="cartModal"><div class="dialog"><div style="display:flex;justify-content:space-between;align-items:center"><h2>Tu carrito</h2><button onclick="closeCart()">✕</button></div><div id="cartItems"></div><p><strong>Total: <span id="cartTotal">RD$0</span></strong></p><label>Nombre<input id="customerName" placeholder="Tu nombre"></label><label>Teléfono<input id="customerPhone" placeholder="Tu teléfono"></label><label>Dirección / detalles<textarea id="customerAddress" placeholder="Lugar de entrega o detalles del pedido"></textarea></label><button class="btn" onclick="checkout()">Enviar pedido por WhatsApp</button><p style="font-size:.8rem;color:#777">El envío por WhatsApp requiere configurar el número del negocio en el archivo app.js.</p></div></div>
+<script src="app.js"></script>
+</body></html>
