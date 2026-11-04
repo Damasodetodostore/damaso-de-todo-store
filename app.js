@@ -3,7 +3,7 @@
 
 const STORE_WHATSAPP = "18090000000"; // Luego colocaremos tu número real.
 
-const SUPABASE_URL = "https://nxaitlmgszqokjqgccczz.supabase.co";
+const SUPABASE_URL = "https://nxaitlmgszqokjqccccz.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_igQfW_x-Dz1QdMxxVYicTQ_wgznRMre";
 
