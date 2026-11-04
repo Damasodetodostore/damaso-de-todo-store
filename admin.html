@@ -1,19 +1,285 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Administrador | Damaso de Todo Store</title>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administrador | Damaso de Todo Store</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--gold:#d6b15e;--black:#111;--cream:#f7f5ef}*{box-sizing:border-box}body{margin:0;background:var(--cream);font-family:Arial,sans-serif;color:#171717}header{background:#111;color:white;padding:18px 5%;border-bottom:2px solid var(--gold);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}header b span{color:var(--gold)}main{max-width:1050px;margin:25px auto;padding:0 16px}.panel{background:white;border:1px solid #e6e1d6;border-radius:12px;padding:20px;margin-bottom:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{font-size:.9rem;font-weight:700}input,textarea,select{display:block;width:100%;margin:6px 0 13px;padding:11px;border:1px solid #ccc;border-radius:6px;font:inherit}.btn{background:var(--gold);border:0;border-radius:6px;padding:11px 15px;font-weight:800;cursor:pointer}.btn.dark{background:#111;color:white}.list{display:grid;gap:10px}.item{border:1px solid #eee;padding:12px;border-radius:8px;display:flex;justify-content:space-between;gap:12px;align-items:center}.item small{color:#777}.item button{margin-left:5px}.note{font-size:.88rem;color:#666;line-height:1.5}@media(max-width:600px){.grid{grid-template-columns:1fr}.item{align-items:flex-start;flex-direction:column}}
-</style></head><body><header><b>DAMASO <span>DE TODO STORE</span> · ADMIN</b><a href="index.html" style="color:#fff">Ver tienda ↗</a></header><main>
-<section class="panel"><h1>Panel de administración</h1><p class="note">Prototipo inicial: permite gestionar productos en el navegador de este dispositivo. Para que los cambios se compartan con todos los clientes y exista un acceso privado real, debe conectarse a Supabase y desplegarse con las reglas de seguridad configuradas.</p></section>
-<section class="panel"><h2 id="formTitle">Agregar producto</h2><form id="productForm"><input type="hidden" id="pid"><div class="grid"><div><label>Nombre del producto</label><input id="name" required placeholder="Ej. Perfume clásico"></div><div><label>Categoría</label><select id="category"><option>Ropa</option><option>Perfumes</option><option>Accesorios</option><option>Otros</option></select></div><div><label>Precio (RD$)</label><input id="price" type="number" min="0" required></div><div><label>URL de imagen</label><input id="image" type="url" placeholder="https://..."></div></div><label>Descripción</label><textarea id="description" rows="3" placeholder="Detalles del producto"></textarea><button class="btn" type="submit">Guardar producto</button> <button class="btn dark" type="button" onclick="resetForm()">Cancelar</button></form></section>
-<section class="panel"><h2>Productos publicados</h2><div id="list" class="list"></div><p class="note">Los productos de ejemplo pueden editarse o eliminarse. Los cambios se guardan en localStorage para esta demostración.</p></section>
-<section class="panel"><h2>Próximo paso: publicación</h2><p class="note">Para un catálogo multiusuario real, crea un proyecto Supabase y configura Auth + Storage + políticas RLS; luego despliega el proyecto en Vercel. No publiques claves secretas en archivos del navegador.</p></section>
-</main><script>
-const key="damaso_products";const defaults=[{id:"p1",name:"Perfume elegante",category:"Perfumes",price:1850,image:"https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=80",description:"Fragancia para ocasiones especiales."},{id:"p2",name:"Camiseta esencial",category:"Ropa",price:950,image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80",description:"Comodidad y estilo."}];
-let products;try{products=JSON.parse(localStorage.getItem(key))||defaults}catch(e){products=defaults}
-const $=id=>document.getElementById(id);function save(){localStorage.setItem(key,JSON.stringify(products));render()}
-function render(){$("list").innerHTML=products.map(p=>`<div class="item"><div><b>${esc(p.name)}</b><br><small>${esc(p.category)} · RD$${Number(p.price).toLocaleString("es-DO")}</small></div><div><button class="btn" onclick="edit('${p.id}')">Editar</button><button class="btn dark" onclick="removeP('${p.id}')">Eliminar</button></div></div>`).join("")||"<p>No hay productos.</p>"}
-function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-$("productForm").addEventListener("submit",e=>{e.preventDefault();let p={id:$("pid").value||"p"+Date.now(),name:$("name").value.trim(),category:$("category").value,price:Number($("price").value),image:$("image").value.trim()||"https://placehold.co/600x600/171717/d6b15e?text=Damaso+Store",description:$("description").value.trim()};let i=products.findIndex(x=>x.id===p.id);i>=0?products[i]=p:products.unshift(p);save();resetForm()});
-function edit(id){let p=products.find(x=>x.id===id);if(!p)return;$("pid").value=p.id;$("name").value=p.name;$("category").value=p.category;$("price").value=p.price;$("image").value=p.image;$("description").value=p.description;$("formTitle").textContent="Editar producto";window.scrollTo({top:0,behavior:"smooth"})}
-function removeP(id){if(confirm("¿Eliminar este producto?")){products=products.filter(p=>p.id!==id);save()}}
-function resetForm(){$("productForm").reset();$("pid").value="";$("formTitle").textContent="Agregar producto"}render();
-</script></body></html>
+body{margin:0;background:#f7f5ef;font-family:Arial;color:#171717}
+header{background:#111;color:white;padding:20px;border-bottom:3px solid #d6b15e}
+header span{color:#d6b15e}
+main{max-width:900px;margin:25px auto;padding:15px}
+.panel{background:white;padding:22px;margin-bottom:20px;border-radius:12px;border:1px solid #ddd}
+input,select,textarea{width:100%;padding:12px;margin:7px 0 15px;box-sizing:border-box;border:1px solid #ccc;border-radius:6px}
+button{padding:11px 16px;background:#d6b15e;border:0;border-radius:6px;font-weight:bold;cursor:pointer}
+.dark{background:#111;color:white}
+.item{padding:13px;border:1px solid #ddd;border-radius:7px;margin:10px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.note{color:#666;font-size:14px}
+</style>
+</head>
+<body>
+
+<header>
+<b>DAMASO <span>DE TODO STORE</span> · ADMINISTRADOR</b>
+</header>
+
+<main>
+
+<section class="panel" id="loginPanel">
+<h2>Iniciar sesión</h2>
+<label>Correo electrónico</label>
+<input type="email" id="email" placeholder="Tu correo">
+<label>Contraseña</label>
+<input type="password" id="password" placeholder="Tu contraseña">
+<button onclick="login()">Entrar</button>
+<p id="loginMessage" class="note"></p>
+</section>
+
+<section class="panel" id="adminPanel" style="display:none">
+<h2>Panel de administración</h2>
+<p>Bienvenido. Puedes administrar los productos de tu tienda.</p>
+<button class="dark" onclick="logout()">Cerrar sesión</button>
+</section>
+
+<section class="panel" id="formPanel" style="display:none">
+<h2 id="formTitle">Agregar producto</h2>
+
+<input type="hidden" id="productId">
+
+<label>Nombre del producto</label>
+<input id="name" placeholder="Nombre del producto">
+
+<label>Categoría</label>
+<select id="category">
+<option>Ropa</option>
+<option>Perfumes</option>
+<option>Accesorios</option>
+<option>Otros</option>
+</select>
+
+<label>Precio en RD$</label>
+<input id="price" type="number" min="0">
+
+<label>URL de imagen</label>
+<input id="image" type="url" placeholder="https://...">
+
+<label>Descripción</label>
+<textarea id="description"></textarea>
+
+<label>Existencia</label>
+<input id="stock" type="number" min="0" value="1">
+
+<button onclick="saveProduct()">Guardar producto</button>
+<button class="dark" onclick="resetForm()">Cancelar</button>
+<p id="message" class="note"></p>
+</section>
+
+<section class="panel" id="productsPanel" style="display:none">
+<h2>Productos publicados</h2>
+<div id="productsList">Cargando...</div>
+</section>
+
+</main>
+
+<script>
+const SUPABASE_URL="https://nxaitlmgszqokjqgccczz.supabase.co";
+const SUPABASE_KEY="sb_publishable_igQfW_x-Dz1QdMxxVYicTQ_wgznRMre";
+
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+async function login(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ const msg=document.getElementById("loginMessage");
+
+ msg.textContent="Verificando acceso...";
+
+ const {data,error}=await db.auth.signInWithPassword({email,password});
+
+ if(error){
+  msg.textContent="Error: "+error.message;
+  return;
+ }
+
+ await checkAdmin();
+}
+
+async function checkAdmin(){
+ const {data:{user}}=await db.auth.getUser();
+
+ if(!user){
+  showLogin();
+  return;
+ }
+
+ const {data,error}=await db
+  .from("store_admins")
+  .select("user_id")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
+ if(error || !data){
+  await db.auth.signOut();
+  document.getElementById("loginMessage").textContent=
+  "Este usuario no tiene autorización de administrador.";
+  showLogin();
+  return;
+ }
+
+ document.getElementById("loginPanel").style.display="none";
+ document.getElementById("adminPanel").style.display="block";
+ document.getElementById("formPanel").style.display="block";
+ document.getElementById("productsPanel").style.display="block";
+
+ loadProducts();
+}
+
+function showLogin(){
+ document.getElementById("loginPanel").style.display="block";
+ document.getElementById("adminPanel").style.display="none";
+ document.getElementById("formPanel").style.display="none";
+ document.getElementById("productsPanel").style.display="none";
+}
+
+async function logout(){
+ await db.auth.signOut();
+ showLogin();
+}
+
+async function loadProducts(){
+ const list=document.getElementById("productsList");
+ list.textContent="Cargando productos...";
+
+ const {data,error}=await db
+  .from("products")
+  .select("*")
+  .order("created_at",{ascending:false});
+
+ if(error){
+  list.textContent="Error al cargar: "+error.message;
+  return;
+ }
+
+ if(!data.length){
+  list.textContent="Todavía no hay productos.";
+  return;
+ }
+
+ list.innerHTML=data.map(p=>`
+ <div class="item">
+ <div>
+ <b>${escapeHTML(p.name)}</b><br>
+ <small>${escapeHTML(p.category||"Otros")} · RD$${Number(p.price).toLocaleString("es-DO")}</small>
+ <br><small>Existencia: ${p.stock||0}</small>
+ </div>
+ <div>
+ <button onclick="editProduct('${p.id}')">Editar</button>
+ <button class="dark" onclick="deleteProduct('${p.id}')">Eliminar</button>
+ </div>
+ </div>
+ `).join("");
+}
+
+function escapeHTML(value){
+ return String(value||"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",
+ '"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+async function saveProduct(){
+ const id=document.getElementById("productId").value;
+ const name=document.getElementById("name").value.trim();
+ const category=document.getElementById("category").value;
+ const price=Number(document.getElementById("price").value);
+ const image_url=document.getElementById("image").value.trim();
+ const description=document.getElementById("description").value.trim();
+ const stock=Number(document.getElementById("stock").value);
+
+ const msg=document.getElementById("message");
+
+ if(!name || !price || price<0){
+  msg.textContent="Completa el nombre y un precio válido.";
+  return;
+ }
+
+ const product={
+  name,category,price,image_url,description,stock,active:true
+ };
+
+ msg.textContent="Guardando producto...";
+
+ let result;
+
+ if(id){
+  result=await db.from("products").update(product).eq("id",id);
+ }else{
+  result=await db.from("products").insert(product);
+ }
+
+ if(result.error){
+  msg.textContent="Error: "+result.error.message;
+  return;
+ }
+
+ msg.textContent="Producto guardado correctamente.";
+ resetForm();
+ loadProducts();
+}
+
+async function editProduct(id){
+ const {data,error}=await db
+  .from("products")
+  .select("*")
+  .eq("id",id)
+  .single();
+
+ if(error){
+  alert(error.message);
+  return;
+ }
+
+ document.getElementById("productId").value=data.id;
+ document.getElementById("name").value=data.name;
+ document.getElementById("category").value=data.category;
+ document.getElementById("price").value=data.price;
+ document.getElementById("image").value=data.image_url||"";
+ document.getElementById("description").value=data.description||"";
+ document.getElementById("stock").value=data.stock||0;
+ document.getElementById("formTitle").textContent="Editar producto";
+
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function deleteProduct(id){
+ if(!confirm("¿Seguro que deseas eliminar este producto?"))return;
+
+ const {error}=await db.from("products").delete().eq("id",id);
+
+ if(error){
+  alert("Error: "+error.message);
+  return;
+ }
+
+ loadProducts();
+}
+
+function resetForm(){
+ document.getElementById("productId").value="";
+ document.getElementById("name").value="";
+ document.getElementById("price").value="";
+ document.getElementById("image").value="";
+ document.getElementById("description").value="";
+ document.getElementById("stock").value="1";
+ document.getElementById("formTitle").textContent="Agregar producto";
+ document.getElementById("message").textContent="";
+}
+
+db.auth.getSession().then(({data})=>{
+ if(data.session)checkAdmin();
+});
+</script>
+
+</body>
+</html>
