@@ -99,6 +99,17 @@ function render() {
                 <button class="btn" onclick="addToCart('${p.id}')">
                     Agregar al carrito
                 </button>
+            <div class="whatsapp-buttons">
+    <a class="btn" target="_blank" rel="noopener noreferrer"
+       href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. ¿Está disponible?`)}">
+       Pedir por WhatsApp 1
+    </a>
+
+    <a class="btn" target="_blank" rel="noopener noreferrer"
+       href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. ¿Está disponible?`)}">
+       Pedir por WhatsApp 2
+    </a>
+</div>
             </div>
         </article>
     `).join("") || "<p>Aún no hay productos publicados.</p>";
