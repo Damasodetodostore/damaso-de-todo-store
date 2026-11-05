@@ -50,7 +50,8 @@ button{padding:11px 16px;background:#d6b15e;border:0;border-radius:6px;font-weig
 <label>Nombre del producto</label>
 <input id="name" placeholder="Nombre del producto">
 
-<label>Categoría</label>
+<label>Categoría</label><input id="image" type="file" accept="image/*">
+<small>Selecciona una fotografía desde tu dispositivo.</small>
 <select id="category">
 <option>Ropa</option>
 <option>Perfumes</option>
@@ -62,7 +63,7 @@ button{padding:11px 16px;background:#d6b15e;border:0;border-radius:6px;font-weig
 <input id="price" type="number" min="0">
 
 <label>URL de imagen</label>
-<input id="image" type="url" placeholder="https://...">
+
 
 <label>Descripción</label>
 <textarea id="description"></textarea>
@@ -192,20 +193,65 @@ async function saveProduct(){
  const name=document.getElementById("name").value.trim();
  const category=document.getElementById("category").value;
  const price=Number(document.getElementById("price").value);
- const image_url=document.getElementById("image").value.trim();
- const description=document.getElementById("description").value.trim();
- const stock=Number(document.getElementById("stock").value);
+ const imageFile = document.getElementById("image").files[0];
+const description = document.getElementById("description").value.trim();
+const stock = Number(document.getElementById("stock").value);
 
- const msg=document.getElementById("message");
+const msg = document.getElementById("message");
 
- if(!name || !price || price<0){
-  msg.textContent="Completa el nombre y un precio válido.";
+if (!name || !price || price < 0) {
+  msg.textContent = "Completa el nombre y un precio válido.";
   return;
- }
+}
 
- const product={
-  name,category,price,image_url,description,stock,active:true
- };
+if (imageFile) {
+  if (!imageFile.type.startsWith("image/")) {
+    msg.textContent = "Selecciona un archivo de imagen válido.";
+    return;
+  }
+
+  const fileName = `${crypto.randomUUID()}-${imageFile.name}`;
+
+  const { data: uploadData, error: uploadError } = await db.storage
+    .from("product-images")
+    .upload(fileName, imageFile);
+
+  if (uploadError) {
+    msg.textContent = "Error al subir la fotografía: " + uploadError.message;
+    return;
+  }
+
+  const { data: urlData } = db.storage
+    .from("product-images")
+    .getPublicUrl(uploadData.path);
+
+  image_url = urlData.publicUrl;
+} else if (id) {
+  const { data: oldProduct, error: oldError } = await db
+    .from("products")
+    .select("image_url")
+    .eq("id", id)
+    .single();
+
+  if (oldError) {
+    msg.textContent = "Error al recuperar la fotografía: " + oldError.message;
+    return;
+  }
+
+  image_url = oldProduct.image_url || "";
+} else {
+  msg.textContent = "Selecciona una fotografía del producto.";
+  return;
+}
+const product = {
+  name,
+  category,
+  price,
+  image_url,
+  description,
+  stock,
+  active: true
+};
 
  msg.textContent="Guardando producto...";
 
@@ -243,7 +289,7 @@ async function editProduct(id){
  document.getElementById("name").value=data.name;
  document.getElementById("category").value=data.category;
  document.getElementById("price").value=data.price;
- document.getElementById("image").value=data.image_url||"";
+ 
  document.getElementById("description").value=data.description||"";
  document.getElementById("stock").value=data.stock||0;
  document.getElementById("formTitle").textContent="Editar producto";
