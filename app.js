@@ -313,9 +313,7 @@ function updateCartCount() {
         );
     }
 }
-// REALIZAR PEDIDO POR WHATSAPP
-```javascript
-// AÑO Y ENLACE DE WHATSAPP
+
 const year = document.getElementById("year");
 // AÑO Y ENLACE DE WHATSAPP
 const year = document.getElementById("year");
