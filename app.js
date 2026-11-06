@@ -314,6 +314,7 @@ function updateCartCount() {
     }
 }
 // REALIZAR PEDIDO POR WHATSAPP
+```javascript
 function checkout() {
 
     if (!cart.length) {
@@ -321,9 +322,7 @@ function checkout() {
     }
 
     let name = document.getElementById("customerName").value.trim();
-
     let phone = document.getElementById("customerPhone").value.trim();
-
     let address = document.getElementById("customerAddress").value.trim();
 
     if (!name || !phone) {
@@ -340,12 +339,13 @@ Nombre: ${name}
 Teléfono: ${phone}
 Entrega: ${address}`;
 
-    window.open(
-        `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(msg)}`,
-        "_blank"
-    );
-}
+    const mensaje = encodeURIComponent(msg);
 
+    window.open(`https://wa.me/18094478191?text=${mensaje}`, "_blank");
+
+    window.open(`https://wa.me/18096171413?text=${mensaje}`, "_blank");
+}
+```
 // AÑO Y ENLACE DE WHATSAPP
 const year = document.getElementById("year");
 
