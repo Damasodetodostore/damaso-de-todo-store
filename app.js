@@ -95,17 +95,24 @@ function render() {
                 <h3>${safe(p.name)}</h3>
 
                 <div class="price">${money(p.price)}</div>
+<label for="qty-${p.id}">Cantidad:</label>
 
+<input
+    type="number"
+    id="qty-${p.id}"
+    value="1"
+    min="1"
+    max="${p.stock || 99}"
+    style="width:70px; padding:8px; margin-bottom:10px;">
                 <button class="btn" onclick="addToCart('${p.id}')">
                     Agregar al carrito
                 </button>
             <div class="whatsapp-buttons">
     <a class="btn" target="_blank" rel="noopener noreferrer"
-       href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. ¿Está disponible? Me gustaría pedir una cantidad de este producto.`)}">
+       href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: ${document.getElementById('qty-' + p.id).value}. ¿Está disponible?`)}">
        Pedir por WhatsApp 1
     </a>
-
-    <a class="btn" target="_blank" rel="noopener noreferrer"href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. ¿Está disponible? Me gustaría pedir una cantidad de este producto.`)}">
+href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: ${document.getElementById('qty-' + p.id).value}. ¿Está disponible?`)}">
        Pedir por WhatsApp 2
     </a>
 </div>
