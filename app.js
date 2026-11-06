@@ -304,6 +304,7 @@ function changeCartQty(index, amount) {
 function removeFromCart(index) {
     cart.splice(index, 1);
 
+    saveCart();
     updateCartCount();
     renderCart();
 }
