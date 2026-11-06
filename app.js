@@ -201,6 +201,96 @@ function addToCart(id) {
 
     alert(`${product.name} se agregó al carrito.`);
 }
+// MOSTRAR LOS PRODUCTOS DEL CARRITO
+function renderCart() {
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+
+    if (!cartItems || !cartTotal) return;
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = "<p>Tu carrito está vacío.</p>";
+        cartTotal.textContent = money(0);
+        return;
+    }
+
+    cartItems.innerHTML = cart.map((item, index) => `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px 0;padding:10px;border-bottom:1px solid #ddd;">
+            <div>
+                <strong>${safe(item.name)}</strong><br>
+                <span>${money(item.price)} × ${item.qty}</span>
+            </div>
+
+            <div>
+                <strong>${money(item.price * item.qty)}</strong><br>
+                <button onclick="changeCartQty(${index}, -1)">−</button>
+                <button onclick="changeCartQty(${index}, 1)">+</button>
+                <button onclick="removeFromCart(${index})">Quitar</button>
+            </div>
+        </div>
+    `).join("");
+
+    const total = cart.reduce(
+        (sum, item) => sum + Number(item.price) * item.qty,
+        0
+    );
+
+    cartTotal.textContent = money(total);
+}
+
+// ABRIR CARRITO
+function openCart() {
+    renderCart();
+
+    const modal = document.getElementById("cartModal");
+
+    if (modal) {
+        modal.style.display = "flex";
+    }
+}
+
+// CERRAR CARRITO
+function closeCart() {
+    const modal = document.getElementById("cartModal");
+
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+// CAMBIAR CANTIDAD
+function changeCartQty(index, amount) {
+    if (!cart[index]) return;
+
+    cart[index].qty += amount;
+
+    if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+    }
+
+    updateCartCount();
+    renderCart();
+}
+
+// QUITAR PRODUCTO
+function removeFromCart(index) {
+    cart.splice(index, 1);
+
+    updateCartCount();
+    renderCart();
+}
+
+// ACTUALIZAR CONTADOR
+function updateCartCount() {
+    const count = document.getElementById("cartCount");
+
+    if (count) {
+        count.textContent = cart.reduce(
+            (total, item) => total + item.qty,
+            0
+        );
+    }
+}
 // REALIZAR PEDIDO POR WHATSAPP
 function checkout() {
 
