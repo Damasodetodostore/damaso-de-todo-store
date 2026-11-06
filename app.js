@@ -101,12 +101,11 @@ function render() {
                 </button>
             <div class="whatsapp-buttons">
     <a class="btn" target="_blank" rel="noopener noreferrer"
-       href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. ¿Está disponible?`)}">
+       href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. ¿Está disponible? Me gustaría pedir una cantidad de este producto.`)}">
        Pedir por WhatsApp 1
     </a>
 
-    <a class="btn" target="_blank" rel="noopener noreferrer"
-       href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. ¿Está disponible?`)}">
+    <a class="btn" target="_blank" rel="noopener noreferrer"href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. ¿Está disponible? Me gustaría pedir una cantidad de este producto.`)}">
        Pedir por WhatsApp 2
     </a>
 </div>
