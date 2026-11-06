@@ -59,12 +59,28 @@ async function loadProducts() {
 
 // MOSTRAR PRODUCTOS
 function render() {
-
     const filters = document.getElementById("filters");
     const grid = document.getElementById("grid");
-const searchInput = document.getElementById("searchInput");
-const searchText = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
     if (!filters || !grid) return;
+
+    let searchInput = document.getElementById("searchInput");
+
+    if (!searchInput) {
+        filters.insertAdjacentHTML("beforebegin", `
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="🔍 Buscar productos..."
+                style="width:90%; max-width:500px; padding:12px; margin:15px auto; display:block; border-radius:10px; border:1px solid #ccc;"
+            >
+        `);
+
+        searchInput = document.getElementById("searchInput");
+        searchInput.addEventListener("input", render);
+    }
+
+    const searchText = searchInput.value.trim().toLowerCase();
 
     const cats = [
         "Todos",
@@ -79,18 +95,17 @@ const searchText = searchInput ? searchInput.value.trim().toLowerCase() : "";
         </button>
     `).join("");
 
-   const shown = products.filter(p => {
+    const shown = products.filter(p => {
+        const matchesCategory =
+            category === "Todos" ||
+            (p.category || "Otros") === category;
 
-    const matchesCategory =
-        category === "Todos" ||
-        (p.category || "Otros") === category;
+        const matchesSearch =
+            (p.name || "").toLowerCase().includes(searchText) ||
+            (p.category || "Otros").toLowerCase().includes(searchText);
 
-    const matchesSearch =
-        (p.name || "").toLowerCase().includes(searchText) ||
-        (p.category || "Otros").toLowerCase().includes(searchText);
-
-    return matchesCategory && matchesSearch;
-});
+        return matchesCategory && matchesSearch;
+    });
 
     grid.innerHTML = shown.map(p => `
         <article class="product">
@@ -101,31 +116,33 @@ const searchText = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
             <div class="pbody">
                 <div class="category">${safe(p.category || "Otros")}</div>
-
                 <h3>${safe(p.name)}</h3>
-
                 <div class="price">${money(p.price)}</div>
-<label for="qty-${p.id}">Cantidad:</label>
 
-<input
-    type="number"
-    id="qty-${p.id}"
-    value="1"
-    min="1"
-    max="${p.stock || 99}"
-    style="width:70px; padding:8px; margin-bottom:10px;">
+                <label for="qty-${p.id}">Cantidad:</label>
+                <input
+                    type="number"
+                    id="qty-${p.id}"
+                    value="1"
+                    min="1"
+                    max="${p.stock || 99}"
+                    style="width:70px; padding:8px; margin-bottom:10px;">
+
                 <button class="btn" onclick="addToCart('${p.id}')">
                     Agregar al carrito
                 </button>
-            <div class="whatsapp-buttons">
-    <a class="btn" target="_blank" rel="noopener noreferrer"
-       href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: ${document.getElementById('qty-' + p.id).value}. ¿Está disponible?`)}">
-       Pedir por WhatsApp 1
-    </a>
-href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: ${document.getElementById('qty-' + p.id).value}. ¿Está disponible?`)}">
-       Pedir por WhatsApp 2
-    </a>
-</div>
+
+                <div class="whatsapp-buttons">
+                    <a class="btn" target="_blank" rel="noopener noreferrer"
+                       href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: 1. ¿Está disponible?`)}">
+                       Pedir por WhatsApp 1
+                    </a>
+
+                    <a class="btn" target="_blank" rel="noopener noreferrer"
+                       href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: 1. ¿Está disponible?`)}">
+                       Pedir por WhatsApp 2
+                    </a>
+                </div>
             </div>
         </article>
     `).join("") || "<p>Aún no hay productos publicados.</p>";
@@ -134,57 +151,6 @@ href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesad
 
     if (count) {
         count.textContent = cart.reduce((a, b) => a + b.qty, 0);
-    }
-}
-
-// AGREGAR AL CARRITO
-function addToCart(id) {
-
-    let p = products.find(x => String(x.id) === String(id));
-
-    if (!p) return;
-
-    let c = cart.find(x => String(x.id) === String(id));
-
-    if (c) {
-        c.qty++;
-    } else {
-        cart.push({ ...p, qty: 1 });
-    }
-
-    render();
-}
-
-// ABRIR CARRITO
-function openCart() {
-    document.getElementById("cartModal")?.classList.add("show");
-    renderCart();
-}
-
-// CERRAR CARRITO
-function closeCart() {
-    document.getElementById("cartModal")?.classList.remove("show");
-}
-
-// MOSTRAR CARRITO
-function renderCart() {
-
-    let items = document.getElementById("cartItems");
-    let total = document.getElementById("cartTotal");
-
-    if (items) {
-        items.innerHTML = cart.map(p => `
-            <div class="cartline">
-                <span>${safe(p.name)} × ${p.qty}</span>
-                <strong>${money(p.price * p.qty)}</strong>
-            </div>
-        `).join("") || "<p>Tu carrito está vacío.</p>";
-    }
-
-    if (total) {
-        total.textContent = money(
-            cart.reduce((a, p) => a + p.price * p.qty, 0)
-        );
     }
 }
 
