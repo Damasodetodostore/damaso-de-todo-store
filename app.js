@@ -220,14 +220,7 @@ function addToCart(id) {
     alert(`${product.name} se agregó al carrito.`);
 }
 
-    const count = document.getElementById("cartCount");
-
-    if (count) {
-        count.textContent = cart.reduce((total, item) => total + item.qty, 0);
-    }
-
-    alert(`${product.name} se agregó al carrito.`);
-}
+    
 // MOSTRAR LOS PRODUCTOS DEL CARRITO
 function renderCart() {
     const cartItems = document.getElementById("cartItems");
