@@ -153,7 +153,54 @@ function render() {
         count.textContent = cart.reduce((a, b) => a + b.qty, 0);
     }
 }
+// AGREGAR PRODUCTOS AL CARRITO
+function addToCart(id) {
+    const product = products.find(p => String(p.id) === String(id));
 
+    if (!product) {
+        alert("No se encontró este producto.");
+        return;
+    }
+
+    const qtyInput = document.getElementById(`qty-${product.id}`);
+    const qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
+
+    if (qty < 1) {
+        alert("La cantidad debe ser mayor que cero.");
+        return;
+    }
+
+    if (product.stock !== undefined && qty > product.stock) {
+        alert(`Solo hay ${product.stock} unidades disponibles.`);
+        return;
+    }
+
+    const existing = cart.find(p => String(p.id) === String(product.id));
+
+    if (existing) {
+        if (product.stock !== undefined && existing.qty + qty > product.stock) {
+            alert(`Solo hay ${product.stock} unidades disponibles.`);
+            return;
+        }
+
+        existing.qty += qty;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: Number(product.price),
+            qty: qty
+        });
+    }
+
+    const count = document.getElementById("cartCount");
+
+    if (count) {
+        count.textContent = cart.reduce((total, item) => total + item.qty, 0);
+    }
+
+    alert(`${product.name} se agregó al carrito.`);
+}
 // REALIZAR PEDIDO POR WHATSAPP
 function checkout() {
 
