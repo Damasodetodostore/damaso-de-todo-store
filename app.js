@@ -314,7 +314,42 @@ function updateCartCount() {
     }
 }
 
-const year = document.getElementById("year");
+// REALIZAR PEDIDO POR WHATSAPP
+function checkout() {
+
+    if (!cart.length) {
+        return alert("Agrega productos al carrito.");
+    }
+
+    const name = document.getElementById("customerName").value.trim();
+    const phone = document.getElementById("customerPhone").value.trim();
+    const address = document.getElementById("customerAddress").value.trim();
+
+    if (!name || !phone) {
+        return alert("Completa tu nombre y teléfono.");
+    }
+
+    const lista = cart.map(function(p) {
+        return "• " + p.name + " x" + p.qty + ": " + money(p.price * p.qty);
+    }).join("\n");
+
+    const total = cart.reduce(function(a, p) {
+        return a + (p.price * p.qty);
+    }, 0);
+
+    const msg = "Hola, quiero realizar este pedido en Damaso de Todo Store:\n\n" +
+        lista + "\n\n" +
+        "Total: " + money(total) + "\n\n" +
+        "Nombre: " + name + "\n" +
+        "Teléfono: " + phone + "\n" +
+        "Entrega: " + address;
+
+    const mensaje = encodeURIComponent(msg);
+
+    window.open("https://wa.me/18094478191?text=" + mensaje, "_blank");
+    window.open("https://wa.me/18096171413?text=" + mensaje, "_blank");
+}
+
 // AÑO Y ENLACE DE WHATSAPP
 const year = document.getElementById("year");
 
@@ -325,7 +360,7 @@ if (year) {
 const wa = document.getElementById("waLink");
 
 if (wa) {
-    wa.href = `https://wa.me/${STORE_WHATSAPP}`;
+    wa.href = "https://wa.me/" + STORE_WHATSAPP;
 }
 
 // INICIAR CATÁLOGO
