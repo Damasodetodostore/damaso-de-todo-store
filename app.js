@@ -13,8 +13,26 @@ const db = window.supabase.createClient(
 );
 
 let products = [];
+
+// RECUPERAR EL CARRITO GUARDADO
 let cart = [];
+
+try {
+    const savedCart = JSON.parse(
+        localStorage.getItem("damasoCart") || "[]"
+    );
+
+    cart = Array.isArray(savedCart) ? savedCart : [];
+} catch (error) {
+    cart = [];
+}
+
 let category = "Todos";
+
+// GUARDAR EL CARRITO
+function saveCart() {
+    localStorage.setItem("damasoCart", JSON.stringify(cart));
+}
 
 const money = n => "RD$" + Number(n || 0).toLocaleString("es-DO");
 
@@ -193,6 +211,15 @@ function addToCart(id) {
         });
     }
 
+    // GUARDAR EL CARRITO
+    saveCart();
+
+    // ACTUALIZAR CONTADOR
+    updateCartCount();
+
+    alert(`${product.name} se agregó al carrito.`);
+}
+
     const count = document.getElementById("cartCount");
 
     if (count) {
@@ -268,6 +295,7 @@ function changeCartQty(index, amount) {
         cart.splice(index, 1);
     }
 
+    saveCart();
     updateCartCount();
     renderCart();
 }
