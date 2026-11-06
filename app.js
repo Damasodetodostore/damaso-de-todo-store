@@ -315,37 +315,8 @@ function updateCartCount() {
 }
 // REALIZAR PEDIDO POR WHATSAPP
 ```javascript
-function checkout() {
-
-    if (!cart.length) {
-        return alert("Agrega productos al carrito.");
-    }
-
-    let name = document.getElementById("customerName").value.trim();
-    let phone = document.getElementById("customerPhone").value.trim();
-    let address = document.getElementById("customerAddress").value.trim();
-
-    if (!name || !phone) {
-        return alert("Completa tu nombre y teléfono.");
-    }
-
-    let msg = `Hola, quiero realizar este pedido en Damaso de Todo Store:
-
-${cart.map(p => `• ${p.name} x${p.qty}: ${money(p.price * p.qty)}`).join("\n")}
-
-Total: ${money(cart.reduce((a, p) => a + p.price * p.qty, 0))}
-
-Nombre: ${name}
-Teléfono: ${phone}
-Entrega: ${address}`;
-
-    const mensaje = encodeURIComponent(msg);
-
-    window.open(`https://wa.me/18094478191?text=${mensaje}`, "_blank");
-
-    window.open(`https://wa.me/18096171413?text=${mensaje}`, "_blank");
-}
-```
+// AÑO Y ENLACE DE WHATSAPP
+const year = document.getElementById("year");
 // AÑO Y ENLACE DE WHATSAPP
 const year = document.getElementById("year");
 
