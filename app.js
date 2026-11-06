@@ -62,7 +62,8 @@ function render() {
 
     const filters = document.getElementById("filters");
     const grid = document.getElementById("grid");
-
+const searchInput = document.getElementById("searchInput");
+const searchText = searchInput ? searchInput.value.trim().toLowerCase() : "";
     if (!filters || !grid) return;
 
     const cats = [
@@ -78,9 +79,18 @@ function render() {
         </button>
     `).join("");
 
-    const shown = category === "Todos"
-        ? products
-        : products.filter(p => p.category === category);
+   const shown = products.filter(p => {
+
+    const matchesCategory =
+        category === "Todos" ||
+        (p.category || "Otros") === category;
+
+    const matchesSearch =
+        (p.name || "").toLowerCase().includes(searchText) ||
+        (p.category || "Otros").toLowerCase().includes(searchText);
+
+    return matchesCategory && matchesSearch;
+});
 
     grid.innerHTML = shown.map(p => `
         <article class="product">
