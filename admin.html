@@ -347,10 +347,13 @@ async function updateOrderStatus(id) {
     }
 
     alert("Estado del pedido actualizado correctamente.");
-
     loadOrders();
 }
- if(data.session)checkAdmin();
+
+db.auth.getSession().then(({ data }) => {
+    if (data.session) {
+        checkAdmin();
+    }
 });
 </script>
 
