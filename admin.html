@@ -332,6 +332,60 @@ function resetForm(){
  document.getElementById("formTitle").textContent="Agregar producto";
  document.getElementById("message").textContent="";
 }
+async function loadOrders() {
+    const ordersList = document.getElementById("ordersList");
+
+    ordersList.innerHTML = "Consultando pedidos...";
+
+    const { data, error } = await db
+        .from("orders")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        ordersList.innerHTML =
+            "Error al cargar pedidos: " + error.message;
+        console.error("Error de pedidos:", error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        ordersList.innerHTML = "Todavía no hay pedidos registrados.";
+        return;
+    }
+
+    ordersList.innerHTML = data.map(p => `
+        <div class="panel">
+            <h3>Pedido #${p.id}</h3>
+            <p><strong>Cliente:</strong> ${p.customer_name || "No indicado"}</p>
+            <p><strong>Teléfono:</strong> ${p.customer_phone || "No indicado"}</p>
+            <p><strong>Dirección:</strong> ${p.delivery_address || "No indicada"}</p>
+            <p><strong>Productos:</strong> ${JSON.stringify(p.items || [])}</p>
+            <p><strong>Total:</strong> RD$ ${p.total || 0}</p>
+            <p><strong>Fecha:</strong> ${p.created_at || "No indicada"}</p>
+
+            <label>Estado del pedido:</label>
+            <select id="status-${p.id}">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Confirmado">Confirmado</option>
+                <option value="Enviado">Enviado</option>
+                <option value="Entregado">Entregado</option>
+                <option value="Cancelado">Cancelado</option>
+            </select>
+
+            <button onclick="updateOrderStatus('${p.id}')">
+                Guardar estado
+            </button>
+        </div>
+    `).join("");
+
+    data.forEach(p => {
+        const select = document.getElementById("status-" + p.id);
+        if (select) {
+            select.value = p.status || "Pendiente";
+        }
+    });
+}    
 async function updateOrderStatus(id) {
     const select = document.getElementById("status-" + id);
     const status = select.value;
