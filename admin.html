@@ -6,16 +6,206 @@
 <title>Administrador | Damaso de Todo Store</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{margin:0;background:#f7f5ef;font-family:Arial;color:#171717}
-header{background:#111;color:white;padding:20px;border-bottom:3px solid #d6b15e}
-header span{color:#d6b15e}
-main{max-width:900px;margin:25px auto;padding:15px}
-.panel{background:white;padding:22px;margin-bottom:20px;border-radius:12px;border:1px solid #ddd}
-input,select,textarea{width:100%;padding:12px;margin:7px 0 15px;box-sizing:border-box;border:1px solid #ccc;border-radius:6px}
-button{padding:11px 16px;background:#d6b15e;border:0;border-radius:6px;font-weight:bold;cursor:pointer}
-.dark{background:#111;color:white}
-.item{padding:13px;border:1px solid #ddd;border-radius:7px;margin:10px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.note{color:#666;font-size:14px}
+:root {
+    --fondo: #f5f6fa;
+    --blanco: #ffffff;
+    --negro: #171717;
+    --dorado: #d6b15e;
+    --dorado-claro: #f8f0dc;
+    --borde: #e5e7eb;
+    --texto-secundario: #6b7280;
+    --verde: #16a34a;
+    --rojo: #dc2626;
+    --azul: #2563eb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--fondo);
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--negro);
+    line-height: 1.5;
+}
+
+header {
+    background: #111111;
+    color: white;
+    padding: 22px 25px;
+    border-bottom: 4px solid var(--dorado);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+header span {
+    color: var(--dorado);
+}
+
+main {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 18px;
+}
+
+.panel {
+    background: var(--blanco);
+    padding: 25px;
+    margin-bottom: 24px;
+    border-radius: 14px;
+    border: 1px solid var(--borde);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+}
+
+.panel h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 21px;
+    border-bottom: 1px solid var(--borde);
+    padding-bottom: 12px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 13px 14px;
+    margin: 7px 0 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--negro);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--dorado);
+    box-shadow: 0 0 0 3px rgba(214,177,94,0.18);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+button {
+    padding: 12px 18px;
+    background: var(--dorado);
+    color: #111111;
+    border: 0;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.dark {
+    background: #111111;
+    color: white;
+}
+
+.item {
+    padding: 16px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    margin: 12px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: #ffffff;
+}
+
+.item strong {
+    font-size: 16px;
+}
+
+.item button {
+    margin: 3px;
+}
+
+.note {
+    color: var(--texto-secundario);
+    font-size: 14px;
+}
+
+#orders .panel {
+    border-left: 5px solid var(--dorado);
+    background: #ffffff;
+}
+
+#orders .panel h3 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+#orders select {
+    max-width: 300px;
+}
+
+#orders button {
+    margin-top: 5px;
+}
+
+img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 18px;
+    }
+
+    header h1 {
+        font-size: 21px;
+    }
+
+    main {
+        margin: 18px auto;
+        padding: 0 12px;
+    }
+
+    .panel {
+        padding: 18px;
+        border-radius: 11px;
+    }
+
+    .item {
+        align-items: flex-start;
+    }
+
+    button {
+        padding: 11px 14px;
+    }
+}
 </style>
 </head>
 <body>
