@@ -352,7 +352,7 @@ async function checkout() {
     const pedido = {
         customer_name: name,
         customer_phone: phone,
-        customer_address: address,
+        delivery_address: address,
         items: cart.map(function(p) {
             return {
                 product_id: p.id,
