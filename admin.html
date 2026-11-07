@@ -390,6 +390,28 @@ async function updateOrderStatus(id) {
     const select = document.getElementById("status-" + id);
     const status = select.value;
 
+    if (status === "Confirmado") {
+        const { data, error } = await db.rpc(
+            "confirm_order_deduct_stock",
+            { p_order_id: id }
+        );
+
+        if (error) {
+            alert("No se pudo confirmar el pedido: " + error.message);
+            loadOrders();
+            return;
+        }
+
+        if (data && data.already_deducted) {
+            alert("Este pedido ya tenía el inventario descontado.");
+        } else {
+            alert("Pedido confirmado e inventario descontado correctamente.");
+        }
+
+        loadOrders();
+        return;
+    }
+
     const { error } = await db
         .from("orders")
         .update({ status: status })
@@ -397,6 +419,7 @@ async function updateOrderStatus(id) {
 
     if (error) {
         alert("No se pudo actualizar el pedido: " + error.message);
+        loadOrders();
         return;
     }
 
