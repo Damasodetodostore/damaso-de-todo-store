@@ -152,25 +152,27 @@ function render() {
 
                 <div class="whatsapp-buttons">
                     <a class="btn" target="_blank" rel="noopener noreferrer"
-                       href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: 1. ¿Está disponible?`)}">
-                       Pedir por WhatsApp 1
-                    </a>
+                      <div class="whatsapp-buttons">
 
-                    <a class="btn" target="_blank" rel="noopener noreferrer"
-                       href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: 1. ¿Está disponible?`)}">
-                       Pedir por WhatsApp 2
-                    </a>
-                </div>
-            </div>
-        </article>
-    `).join("") || "<p>Aún no hay productos publicados.</p>";
+    <a class="whatsapp-btn"
+       target="_blank"
+       rel="noopener noreferrer"
+       href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: 1. ¿Está disponible?`)}">
 
-    const count = document.getElementById("cartCount");
+        <span class="whatsapp-icon">☏</span>
+        Comprar por WhatsApp 1
+    </a>
 
-    if (count) {
-        count.textContent = cart.reduce((a, b) => a + b.qty, 0);
-    }
-}
+    <a class="whatsapp-btn"
+       target="_blank"
+       rel="noopener noreferrer"
+       href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: 1. ¿Está disponible?`)}">
+
+        <span class="whatsapp-icon">☏</span>
+        Comprar por WhatsApp 2
+    </a>
+
+</div>
 // AGREGAR PRODUCTOS AL CARRITO
 function addToCart(id) {
     const product = products.find(p => String(p.id) === String(id));
