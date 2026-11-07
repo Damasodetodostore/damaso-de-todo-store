@@ -80,7 +80,17 @@ button{padding:11px 16px;background:#d6b15e;border:0;border-radius:6px;font-weig
 <h2>Productos publicados</h2>
 <div id="productsList">Cargando...</div>
 </section>
+<section class="panel" id="ordersPanel" style="display:none">
+    <h2>Pedidos recibidos</h2>
 
+    <button class="dark" onclick="loadOrders()">
+        Actualizar pedidos
+    </button>
+
+    <div id="ordersList">
+        Cargando pedidos...
+    </div>
+</section>
 </main>
 
 <script>const SUPABASE_URL = "https://nxaitlmgszqokjqccccz.supabase.co";
