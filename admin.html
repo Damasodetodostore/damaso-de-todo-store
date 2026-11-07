@@ -544,38 +544,94 @@ async function loadOrders() {
         return;
     }
 
-    ordersList.innerHTML = data.map(p => `
-        <div class="panel">
-            <h3>Pedido #${p.id}</h3>
-            <p><strong>Cliente:</strong> ${p.customer_name || "No indicado"}</p>
-            <p><strong>Teléfono:</strong> ${p.customer_phone || "No indicado"}</p>
-            <p><strong>Dirección:</strong> ${p.delivery_address || "No indicada"}</p>
-            <p><strong>Productos:</strong> ${JSON.stringify(p.items || [])}</p>
-            <p><strong>Total:</strong> RD$ ${p.total || 0}</p>
-            <p><strong>Fecha:</strong> ${p.created_at || "No indicada"}</p>
+    const colores = {
+        "Pendiente": "#f59e0b",
+        "Confirmado": "#2563eb",
+        "Enviado": "#7c3aed",
+        "Entregado": "#16a34a",
+        "Cancelado": "#dc2626"
+    };
 
-            <label>Estado del pedido:</label>
-            <select id="status-${p.id}">
-                <option value="Pendiente">Pendiente</option>
-                <option value="Confirmado">Confirmado</option>
-                <option value="Enviado">Enviado</option>
-                <option value="Entregado">Entregado</option>
-                <option value="Cancelado">Cancelado</option>
-            </select>
+    ordersList.innerHTML = data.map(p => {
+        const estado = p.status || "Pendiente";
+        const color = colores[estado] || "#6b7280";
 
-            <button onclick="updateOrderStatus('${p.id}')">
-                Guardar estado
-            </button>
-        </div>
-    `).join("");
+        return `
+            <div class="panel"
+                 style="border-left: 6px solid ${color};">
+
+                <h3>Pedido #${p.id}</h3>
+
+                <p>
+                    <strong>Cliente:</strong>
+                    ${p.customer_name || "No indicado"}
+                </p>
+
+                <p>
+                    <strong>Teléfono:</strong>
+                    ${p.customer_phone || "No indicado"}
+                </p>
+
+                <p>
+                    <strong>Dirección:</strong>
+                    ${p.delivery_address || "No indicada"}
+                </p>
+
+                <p>
+                    <strong>Productos:</strong>
+                    ${JSON.stringify(p.items || [])}
+                </p>
+
+                <p>
+                    <strong>Total:</strong>
+                    RD$ ${p.total || 0}
+                </p>
+
+                <p>
+                    <strong>Fecha:</strong>
+                    ${p.created_at || "No indicada"}
+                </p>
+
+                <p>
+                    <strong>Estado actual:</strong>
+                    <span style="
+                        background:${color};
+                        color:white;
+                        padding:5px 10px;
+                        border-radius:20px;
+                        font-weight:bold;
+                        font-size:13px;
+                    ">
+                        ${estado}
+                    </span>
+                </p>
+
+                <label>Estado del pedido:</label>
+
+                <select id="status-${p.id}">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Confirmado">Confirmado</option>
+                    <option value="Enviado">Enviado</option>
+                    <option value="Entregado">Entregado</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+
+                <button onclick="updateOrderStatus('${p.id}')">
+                    Guardar estado
+                </button>
+
+            </div>
+        `;
+    }).join("");
 
     data.forEach(p => {
         const select = document.getElementById("status-" + p.id);
+
         if (select) {
             select.value = p.status || "Pendiente";
         }
     });
-}    
+} 
 async function updateOrderStatus(id) {
     const select = document.getElementById("status-" + id);
     const status = select.value;
