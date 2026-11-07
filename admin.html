@@ -141,8 +141,10 @@ async function checkAdmin(){
  document.getElementById("adminPanel").style.display="block";
  document.getElementById("formPanel").style.display="block";
  document.getElementById("productsPanel").style.display="block";
+document.getElementById("ordersPanel").style.display="block";
 
- loadProducts();
+loadProducts();
+loadOrders();
 }
 
 function showLogin(){
@@ -330,8 +332,24 @@ function resetForm(){
  document.getElementById("formTitle").textContent="Agregar producto";
  document.getElementById("message").textContent="";
 }
+async function updateOrderStatus(id) {
+    const select = document.getElementById("status-" + id);
+    const status = select.value;
 
-db.auth.getSession().then(({data})=>{
+    const { error } = await db
+        .from("orders")
+        .update({ status: status })
+        .eq("id", id);
+
+    if (error) {
+        alert("No se pudo actualizar el pedido: " + error.message);
+        return;
+    }
+
+    alert("Estado del pedido actualizado correctamente.");
+
+    loadOrders();
+}
  if(data.session)checkAdmin();
 });
 </script>
