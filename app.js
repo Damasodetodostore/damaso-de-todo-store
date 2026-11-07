@@ -157,20 +157,29 @@ function render() {
     <a class="whatsapp-btn"
        target="_blank"
        rel="noopener noreferrer"
+       <div class="whatsapp-buttons">
+    <a class="whatsapp-btn" target="_blank" rel="noopener noreferrer"
        href="https://wa.me/18094478191?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: 1. ¿Está disponible?`)}">
 
-        <span class="whatsapp-icon">☏</span>
-        Comprar por WhatsApp 1
+        <span class="whatsapp-icon">
+            <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6a10.5 10.5 0 0 1-5.3-1.4l-.4-.2-3.9 1 1-3.8-.3-.4A10.5 10.5 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.6 8.6 0 0 1-2.5-1.5 9.4 9.4 0 0 1-1.7-2.1c-.2-.3 0-.5.2-.7l.5-.6c.2-.2.2-.4.3-.6s0-.4 0-.6-.7-1.7-1-2.3-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4 2.4 3.7 5.8 5.1c.8.3 1.4.5 1.9.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4s.3-1.3.2-1.4-.3-.2-.6-.4z"/>
+            </svg>
+        </span>
+        Pedir por WhatsApp 1
     </a>
 
-    <a class="whatsapp-btn"
-       target="_blank"
-       rel="noopener noreferrer"
+    <a class="whatsapp-btn" target="_blank" rel="noopener noreferrer"
        href="https://wa.me/18096171413?text=${encodeURIComponent(`Hola, estoy interesado en ${p.name} por ${money(p.price)}. Cantidad: 1. ¿Está disponible?`)}">
 
-        <span class="whatsapp-icon">☏</span>
-        Comprar por WhatsApp 2
+        <span class="whatsapp-icon">
+            <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6a10.5 10.5 0 0 1-5.3-1.4l-.4-.2-3.9 1 1-3.8-.3-.4A10.5 10.5 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.6 8.6 0 0 1-2.5-1.5 9.4 9.4 0 0 1-1.7-2.1c-.2-.3 0-.5.2-.7l.5-.6c.2-.2.2-.4.3-.6s0-.4 0-.6-.7-1.7-1-2.3-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4 2.4 3.7 5.8 5.1c.8.3 1.4.5 1.9.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4s.3-1.3.2-1.4-.3-.2-.6-.4z"/>
+            </svg>
+        </span>
+        Pedir por WhatsApp 2
     </a>
+</div>
 
 </div>
 // AGREGAR PRODUCTOS AL CARRITO
