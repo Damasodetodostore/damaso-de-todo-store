@@ -315,7 +315,7 @@ function updateCartCount() {
 }
 
 // REALIZAR PEDIDO POR WHATSAPP
-function checkout() {
+async function checkout() {
 
     if (!cart.length) {
         return alert("Agrega productos al carrito.");
@@ -334,7 +334,7 @@ function checkout() {
     }).join("\n");
 
     const total = cart.reduce(function(a, p) {
-        return a + (p.price * p.qty);
+        return a + (Number(p.price) * Number(p.qty));
     }, 0);
 
     const msg = "Hola, quiero realizar este pedido en Damaso de Todo Store:\n\n" +
@@ -346,8 +346,46 @@ function checkout() {
 
     const mensaje = encodeURIComponent(msg);
 
-    window.open("https://wa.me/18094478191?text=" + mensaje, "_blank");
-    window.open("https://wa.me/18096171413?text=" + mensaje, "_blank");
+    const wa1 = window.open("about:blank", "_blank");
+    const wa2 = window.open("about:blank", "_blank");
+
+    const pedido = {
+        customer_name: name,
+        customer_phone: phone,
+        customer_address: address,
+        items: cart.map(function(p) {
+            return {
+                product_id: p.id,
+                name: p.name,
+                price: Number(p.price),
+                quantity: Number(p.qty)
+            };
+        }),
+        total: total,
+        status: "Pendiente"
+    };
+
+    const { error } = await db.from("orders").insert([pedido]);
+
+    if (error) {
+        if (wa1) wa1.close();
+        if (wa2) wa2.close();
+
+        console.error("Error guardando pedido:", error.message);
+        return alert("No se pudo guardar el pedido. Inténtalo nuevamente.");
+    }
+
+    if (wa1) {
+        wa1.location.href = "https://wa.me/18094478191?text=" + mensaje;
+    }
+
+    if (wa2) {
+        wa2.location.href = "https://wa.me/18096171413?text=" + mensaje;
+    }
+
+    if (!wa1 || !wa2) {
+        alert("Pedido guardado. Si no se abrieron los dos WhatsApp, permite las ventanas emergentes del sitio.");
+    }
 }
 
 // AÑO Y ENLACE DE WHATSAPP
