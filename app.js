@@ -168,7 +168,9 @@ function render() {
 </div>
     
         </article>
-    `).join("") || "<p>Aún no hay productos publicados.</p>";
+        `).join("") || "<p>Aún no hay productos publicados.</p>";
+}
+
 // AGREGAR PRODUCTOS AL CARRITO
 function addToCart(id) {
     const product = products.find(p => String(p.id) === String(id));
